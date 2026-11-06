@@ -1,0 +1,6 @@
+node_modules/
+# Stock clips and anything derived from them stay local (licence); tests skip without them.
+test/clips/
+test/traces/
+test/sheets/
+.DS_Store

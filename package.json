@@ -1,0 +1,19 @@
+{
+  "name": "workout-tracker",
+  "version": "1.0.0",
+  "description": "Camera rep counter: pushups, squats, lunges, sit-ups, crunches, jumping jacks, plank",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "serve": "node scripts/serve.mjs",
+    "e2e": "node test/e2e.mjs",
+    "extract": "node test/extract.mjs",
+    "icons": "node scripts/icons.mjs",
+    "vendor": "mkdir -p vendor/mediapipe/wasm && cp node_modules/@mediapipe/tasks-vision/vision_bundle.mjs vendor/mediapipe/ && cp node_modules/@mediapipe/tasks-vision/wasm/vision_wasm_internal.* vendor/mediapipe/wasm/"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@mediapipe/tasks-vision": "^1.2.2",
+    "playwright-core": "^1.65.0"
+  },
+  "private": true
+}

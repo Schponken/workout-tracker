@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Reps">
+  <meta name="description" content="Point your phone camera at yourself and it counts your pushups, squats, lunges, sit-ups, jumping jacks and planks.">
+  <title>Reps</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="stage">
+    <video id="video" playsinline muted autoplay></video>
+    <canvas id="overlay" aria-hidden="true"></canvas>
+
+    <section class="hud" id="hud">
+      <button id="exercise" class="exercise" aria-haspopup="dialog" aria-label="Choose exercise">
+        <span id="exName">Auto-detect</span>
+        <svg class="lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+      </button>
+      <div id="count" class="count dim">0</div>
+      <div id="detail" class="detail">Start moving, I'll pick it up</div>
+    </section>
+
+    <div class="tools">
+      <button id="flip" aria-label="Switch camera">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><path d="M9.5 13.5a3 3 0 0 0 5.2 1.4M14.5 12.5a3 3 0 0 0-5.2-1.4"/><path d="M14.8 16.2v-1.6h-1.6M9.2 9.8v1.6h1.6"/></svg>
+      </button>
+      <button id="sound" aria-label="Voice counting" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="m16 9 6 6m0-6-6 6"/></svg>
+      </button>
+      <button id="logBtn" aria-label="Workout log" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+      </button>
+    </div>
+
+    <div id="meter" class="meter" hidden aria-hidden="true"><div class="fill"></div><div class="mark"></div></div>
+    <div id="hint" class="hint" role="status"></div>
+    <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+    <ul id="today" class="today" aria-label="Today's totals"></ul>
+    <div id="debug" class="debug" hidden></div>
+  </main>
+
+  <div id="start" class="start">
+    <div class="start-card">
+      <h1>Reps</h1>
+      <p class="lede">Prop your phone up, step back, and work out. It counts every rep out loud.</p>
+      <ul class="tips">
+        <li><b>2–3 m away</b>, phone low, whole body in the frame.</li>
+        <li><b>Side-on</b> for pushups, squats, lunges, sit-ups and plank. <b>Facing it</b> for jumping jacks.</li>
+        <li>It works out the exercise itself. Tap the name to lock one.</li>
+      </ul>
+      <button id="go" class="go" disabled>Loading…</button>
+      <div class="progress" aria-hidden="true"><div id="bar"></div></div>
+      <p id="status" class="status" role="status"></p>
+      <p id="install" class="fine" hidden>Tip: Share → <b>Add to Home Screen</b> to keep your history and go full screen.</p>
+      <p class="fine">Video never leaves your phone. <button id="startLog" class="link">See your log</button></p>
+    </div>
+  </div>
+
+  <dialog id="picker" class="sheet" aria-label="Choose exercise">
+    <form method="dialog">
+      <h2>Exercise</h2>
+      <div id="choices" class="choices"></div>
+    </form>
+  </dialog>
+
+  <dialog id="log" class="sheet" aria-label="Workout log">
+    <header class="sheet-head">
+      <h2>Log</h2>
+      <button id="export" class="pill">Export CSV</button>
+      <form method="dialog"><button class="pill" aria-label="Close log">Done</button></form>
+    </header>
+    <div id="logBody" class="log-body"></div>
+    <button id="clear" class="danger">Clear history</button>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

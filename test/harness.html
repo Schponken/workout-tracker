@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Pose extraction harness</title>
+<video id="v" muted playsinline></video>
+<script type="module">
+  // Steps through a clip frame by frame and records MediaPipe landmarks, so the engine can be tuned in Node.
+  import { FilesetResolver, PoseLandmarker } from '../vendor/mediapipe/vision_bundle.mjs';
+
+  const vision = await FilesetResolver.forVisionTasks('../vendor/mediapipe/wasm');
+  const v = document.getElementById('v');
+  const once = (el, ev) => new Promise((r) => el.addEventListener(ev, r, { once: true }));
+  const r4 = (x) => Math.round(x * 1e4) / 1e4;
+  const pack = (l) => [r4(l.x), r4(l.y), r4(l.z), Math.round((l.visibility ?? 0) * 1e3) / 1e3];
+
+  window.extract = async (src, fps) => {
+    const lm = await PoseLandmarker.createFromOptions(vision, {
+      baseOptions: { modelAssetPath: '../models/pose_landmarker_full.task', delegate: 'CPU' },
+      runningMode: 'VIDEO',
+      numPoses: 1,
+    });
+    v.src = URL.createObjectURL(await (await fetch(src)).blob()); // blob URLs seek without range requests
+    await once(v, 'loadedmetadata');
+    const out = [];
+    for (let i = 0; i / fps < v.duration; i++) {
+      v.currentTime = i / fps;
+      await once(v, 'seeked');
+      const t = Math.round((i * 1000) / fps);
+      const res = lm.detectForVideo(v, t + 1);
+      out.push(res.landmarks[0] ? { t, w: res.worldLandmarks[0].map(pack), i: res.landmarks[0].map(pack) } : { t });
+    }
+    lm.close();
+    URL.revokeObjectURL(v.src);
+    return { w: v.videoWidth, h: v.videoHeight, frames: out };
+  };
+  window.ready = true;
+</script>
