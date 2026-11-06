@@ -156,7 +156,22 @@ const ready = (async () => {
     landmarker = await createLandmarker('CPU');
   }
   progress(1);
+  seedOfflineCache([[FILES.model, model, 'application/octet-stream'], [FILES.wasm, wasm, 'application/wasm']]);
 })();
+
+// The first launch isn't controlled by the service worker yet, so hand it the 24 MB we already have:
+// the next launch then works with no signal, without downloading anything twice.
+async function seedOfflineCache(files) {
+  try {
+    const cache = await caches.open('reps-assets-1'); // same name as ASSETS in sw.js
+    for (const [path, bytes, type] of files) {
+      const url = new URL(path, location.href).href;
+      if (!(await cache.match(url))) await cache.put(url, new Response(bytes, { headers: { 'content-type': type } }));
+    }
+  } catch {
+    // no Cache API (or no space): it will simply download again next time
+  }
+}
 ready.catch((e) => {
   console.error(e);
   setStatus("Couldn't load the body tracker. Check your connection and reload.", true);

@@ -8,7 +8,8 @@
     "e2e": "node test/e2e.mjs",
     "extract": "node test/extract.mjs",
     "icons": "node scripts/icons.mjs",
-    "vendor": "mkdir -p vendor/mediapipe/wasm && cp node_modules/@mediapipe/tasks-vision/vision_bundle.mjs vendor/mediapipe/ && cp node_modules/@mediapipe/tasks-vision/wasm/vision_wasm_internal.* vendor/mediapipe/wasm/"
+    "vendor": "mkdir -p vendor/mediapipe/wasm && cp node_modules/@mediapipe/tasks-vision/vision_bundle.mjs vendor/mediapipe/ && cp node_modules/@mediapipe/tasks-vision/wasm/vision_wasm_internal.* vendor/mediapipe/wasm/",
+    "live": "node test/live.mjs"
   },
   "type": "module",
   "devDependencies": {

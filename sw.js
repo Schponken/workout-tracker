@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION whenever the app shell changes so phones pick up the new build.
-const VERSION = '1';
+const VERSION = '2';
 const SHELL = `reps-shell-${VERSION}`;
 const ASSETS = 'reps-assets-1'; // the 24 MB model + wasm: kept across app updates
 const SHELL_FILES = [
